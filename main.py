@@ -2,15 +2,21 @@ import json
 import os
 import threading
 import time
-
 import requests
-
 
 class Main:
     def __init__(self):
-        self.GUILD_ID = input('[>] Guild ID: ')
-        self.CHANNEL_ID = input('[>] Channel ID: ')
-        self.MESSAGE_ID = input('[>] Message ID: ')
+        # Pre-filled IDs (you can still override them via input)
+        self.GUILD_ID = "959163723971428402"  # Pre-filled server ID
+        self.CHANNEL_ID = "1001850935234011248"  # Pre-filled channel ID
+        self.MESSAGE_ID = "1387561075179913216"  # Pre-filled message ID
+        
+        # Allow manual override if needed
+        if input("Use pre-filled IDs? (y/n): ").lower() == 'n':
+            self.GUILD_ID = input('[>] Guild ID: ')
+            self.CHANNEL_ID = input('[>] Channel ID: ')
+            self.MESSAGE_ID = input('[>] Message ID: ')
+        
         REASON = input(
             '\n[1] Illegal content\n'
             '[2] Harassment\n'
@@ -50,12 +56,14 @@ class Main:
 
     def _reporter(self):
         report = requests.post(
-            'https://discordapp.com/api/v8/report', json={
+            'https://discordapp.com/api/v9/report',  # Updated to v9 API
+            json={
                 'channel_id': self.CHANNEL_ID,
                 'message_id': self.MESSAGE_ID,
                 'guild_id': self.GUILD_ID,
                 'reason': self.REASON
-            }, headers={
+            }, 
+            headers={
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip, deflate',
                 'Accept-Language': 'sv-SE',
@@ -105,7 +113,6 @@ class Main:
                 json.dump({'discordToken': self.TOKEN}, f)
         print()
         self._multi_threading()
-
 
 if __name__ == '__main__':
     os.system('cls && title [Discord Reporter] - Main Menu')
